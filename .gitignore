@@ -1,0 +1,31 @@
+# Secretos y credenciales
+.env
+.env.*
+!.env.example
+
+# Datos personales y operativos (no van al repo público)
+memory/
+.claude/
+
+# Archivos temporales de trabajo
+.tmp/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.python-version
+
+# macOS
+.DS_Store
+
+# IDEs
+.vscode/
+.idea/
+
+# Node
+node_modules/
+dist/
+build/

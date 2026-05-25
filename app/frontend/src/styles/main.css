@@ -1,0 +1,650 @@
+/* ============================================================
+   main.css — Poker Training App
+   Dark felt theme. No external UI library dependencies.
+   ============================================================ */
+
+/* --- Reset & base ----------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --felt-dark:     #0d1f0d;
+  --felt-mid:      #1a3a1a;
+  --felt-light:    #2a5a2a;
+  --felt-border:   #3d7a3d;
+  --gold:          #d4a017;
+  --gold-light:    #f0c040;
+  --text-primary:  #e8f5e9;
+  --text-muted:    #a5c8a5;
+  --card-bg:       #fdfdf0;
+  --card-border:   #ccccaa;
+  --red:           #cc0000;
+  --black:         #1a1a1a;
+
+  --rating-good:    #22c55e;
+  --rating-ok:      #eab308;
+  --rating-mistake: #f97316;
+  --rating-blunder: #ef4444;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --shadow: 0 4px 16px rgba(0,0,0,0.6);
+}
+
+html, body {
+  height: 100%;
+  background-color: var(--felt-dark);
+  color: var(--text-primary);
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Typography -------------------------------------------- */
+h1, h2, h3 {
+  font-family: 'Georgia', serif;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+}
+
+h1 { font-size: 2rem; }
+h2 { font-size: 1.4rem; }
+h3 { font-size: 1.1rem; }
+
+p { margin-bottom: 0.75em; }
+
+/* --- Layout ------------------------------------------------ */
+.app-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: var(--felt-mid);
+  border-bottom: 2px solid var(--felt-border);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  margin-bottom: 1.5rem;
+}
+
+.header h1 {
+  font-size: 1.5rem;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 1.5rem;
+}
+
+.left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* --- Panel / card ----------------------------------------- */
+.panel {
+  background: var(--felt-mid);
+  border: 1px solid var(--felt-border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+}
+
+.panel-title {
+  color: var(--gold);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--felt-border);
+}
+
+/* --- Poker table ------------------------------------------ */
+.poker-table {
+  background: radial-gradient(ellipse 90% 70% at 50% 50%, var(--felt-light), var(--felt-mid));
+  border: 4px solid #6b4c11;
+  border-radius: 50%;
+  padding: 2rem 3rem;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.5), var(--shadow);
+}
+
+.poker-table-info {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.poker-table-info span strong {
+  color: var(--text-primary);
+}
+
+.cards-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.cards-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* --- Playing card ----------------------------------------- */
+.card {
+  width: 52px;
+  height: 76px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  box-shadow: 1px 2px 6px rgba(0,0,0,0.6);
+  user-select: none;
+  line-height: 1.1;
+}
+
+.card.red { color: var(--red); }
+.card.black { color: var(--black); }
+
+.card.placeholder {
+  background: var(--felt-dark);
+  border: 2px dashed var(--felt-border);
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.card-rank {
+  font-size: 1.1rem;
+}
+
+.card-suit {
+  font-size: 0.95rem;
+}
+
+/* --- Position badge --------------------------------------- */
+.position-badge {
+  display: inline-block;
+  background: var(--gold);
+  color: #1a1a00;
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* --- Action buttons --------------------------------------- */
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+
+.btn {
+  padding: 0.65rem 1.25rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+  font-family: 'Georgia', serif;
+  letter-spacing: 0.04em;
+}
+
+.btn:hover { opacity: 0.88; }
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+.btn-fold    { background: #7f1d1d; color: #fecaca; }
+.btn-check   { background: #1e3a5f; color: #bfdbfe; }
+.btn-call    { background: #14532d; color: #bbf7d0; }
+.btn-bet     { background: #78350f; color: #fef3c7; }
+.btn-raise   { background: #4c1d95; color: #ede9fe; }
+.btn-primary { background: var(--gold); color: #1a1a00; }
+.btn-secondary {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--felt-border);
+}
+.secondary-button {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--felt-border);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.15s, border-color 0.15s;
+}
+.secondary-button:hover {
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+}
+
+.bet-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.bet-input-group label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.bet-input-group input[type="range"] {
+  width: 160px;
+  accent-color: var(--gold);
+}
+
+.bet-input-group .bet-value {
+  font-size: 0.9rem;
+  color: var(--gold-light);
+  font-weight: bold;
+}
+
+/* --- Feedback panel --------------------------------------- */
+.feedback-panel {}
+
+.rating-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+.rating-score {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.rating-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.feedback-section {
+  margin-bottom: 1rem;
+}
+
+.feedback-section-title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 0.3rem;
+}
+
+.feedback-section-body {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.drill-box {
+  background: var(--felt-dark);
+  border-left: 3px solid var(--gold);
+  padding: 0.75rem 1rem;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 0.9rem;
+  color: var(--gold-light);
+}
+
+/* --- Hand history ----------------------------------------- */
+.hand-history-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.hand-history-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--felt-dark);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid transparent;
+  font-size: 0.85rem;
+}
+
+.hand-history-item .cards-mini {
+  display: flex;
+  gap: 2px;
+}
+
+.hand-history-item .mini-card {
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.hand-history-item .action-text {
+  flex: 1;
+  color: var(--text-muted);
+}
+
+.hand-history-item .score-text {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+/* --- User progress ---------------------------------------- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.stat-box {
+  background: var(--felt-dark);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem;
+  text-align: center;
+}
+
+.stat-box .stat-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--gold-light);
+  display: block;
+}
+
+.stat-box .stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* --- Loading / empty states ------------------------------- */
+.loading {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 2rem;
+  font-style: italic;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 1.5rem;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* --- Idle / welcome screen -------------------------------- */
+.welcome-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.welcome-screen h2 {
+  font-size: 1.8rem;
+  color: var(--gold);
+}
+
+.welcome-screen p {
+  color: var(--text-muted);
+  max-width: 480px;
+}
+
+/* --- Scrollbar -------------------------------------------- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--felt-dark); }
+::-webkit-scrollbar-thumb { background: var(--felt-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+/* --- Fixture selector ------------------------------------- */
+.fixture-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.fixture-selector-header {
+  text-align: center;
+}
+
+.fixture-selector-sub {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+.fixture-random-btn {
+  font-size: 1.1rem;
+  padding: 0.9rem 2.5rem;
+  width: 100%;
+  max-width: 320px;
+}
+
+.fixture-divider {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.fixture-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  width: 100%;
+}
+
+.fixture-item {
+  background: var(--felt-mid);
+  border: 1px solid var(--felt-border);
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1.1rem;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+  font-family: 'Georgia', serif;
+  color: var(--text-primary);
+}
+
+.fixture-item:hover:not(:disabled) {
+  border-color: var(--gold);
+  background: var(--felt-light);
+}
+
+.fixture-item:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.fixture-item-top {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.35rem;
+}
+
+.fixture-item-label {
+  font-weight: bold;
+  font-size: 0.95rem;
+  color: var(--gold-light);
+  flex: 1;
+}
+
+.fixture-item-street,
+.fixture-item-diff {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  text-transform: capitalize;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+.fixture-item-street {
+  color: #e8f5e9;
+}
+
+.fixture-item-diff {
+  background: var(--felt-dark);
+  color: var(--text-muted);
+  border: 1px solid var(--felt-border);
+}
+
+.fixture-item-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* --- Mistake category tag --------------------------------- */
+.mistake-tag {
+  display: inline-block;
+  background: #7f1d1d33;
+  color: #fca5a5;
+  border: 1px solid #7f1d1d;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  padding: 2px 10px;
+  text-transform: capitalize;
+  letter-spacing: 0.05em;
+}
+
+/* --- Session report --------------------------------------- */
+.session-report {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.session-report-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.session-report-block {
+  background: var(--felt-dark);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem;
+}
+
+.session-report-block-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+.session-report-block-value {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.session-report-drill {
+  background: var(--felt-dark);
+  border-left: 3px solid var(--gold);
+  padding: 0.75rem 1rem;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 0.9rem;
+  color: var(--gold-light);
+}
+
+.session-report-note {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+  padding: 0.5rem 0;
+}
+
+/* --- Feedback panel: improved sections -------------------- */
+.feedback-divider {
+  border: none;
+  border-top: 1px solid var(--felt-border);
+  margin: 0.75rem 0;
+}
+
+/* --- Responsive ------------------------------------------- */
+@media (max-width: 820px) {
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+  .right-column {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .right-column > * {
+    flex: 1 1 240px;
+  }
+  .poker-table {
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+  }
+  .session-report-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+}
