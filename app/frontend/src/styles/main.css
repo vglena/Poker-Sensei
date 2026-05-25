@@ -1,6 +1,7 @@
 /* ============================================================
-   main.css — Poker Training App
-   Dark felt theme. No external UI library dependencies.
+   main.css — Poker Sensei
+   Dojo discipline theme. Dark felt base, warm wood accents,
+   parchment highlights. No external UI library dependencies.
    ============================================================ */
 
 /* --- Reset & base ----------------------------------------- */
@@ -11,33 +12,77 @@
 }
 
 :root {
-  --felt-dark:     #0d1f0d;
-  --felt-mid:      #1a3a1a;
-  --felt-light:    #2a5a2a;
-  --felt-border:   #3d7a3d;
-  --gold:          #d4a017;
-  --gold-light:    #f0c040;
-  --text-primary:  #e8f5e9;
-  --text-muted:    #a5c8a5;
+  /* Felt base — still a poker table */
+  --felt-dark:     #0a1a0a;
+  --felt-mid:      #142414;
+  --felt-light:    #1e3a1e;
+  --felt-border:   #2e5a2e;
+
+  /* Gold — muted, premium */
+  --gold:          #c8921a;
+  --gold-light:    #e8b84b;
+
+  /* Text */
+  --text-primary:  #e6f0e6;
+  --text-muted:    #8aab8a;
+
+  /* Card colours (unchanged) */
   --card-bg:       #fdfdf0;
   --card-border:   #ccccaa;
   --red:           #cc0000;
   --black:         #1a1a1a;
 
+  /* Rating colours (unchanged) */
   --rating-good:    #22c55e;
-  --rating-ok:      #eab308;
-  --rating-mistake: #f97316;
-  --rating-blunder: #ef4444;
+  --rating-ok:      #ca8a04;
+  --rating-mistake: #ea580c;
+  --rating-blunder: #dc2626;
+
+  /* ── Dojo palette ── */
+  --dojo-bg:         #080f08;
+  --dojo-panel:      #111e11;
+  --dojo-wood:       #2e1f0e;
+  --dojo-wood-light: #4a3020;
+  --dojo-gold:       #b8841a;
+  --dojo-red:        #8b1a1a;
+  --dojo-parchment:  #e8dfc8;
+  --dojo-border:     #6b4c22;
+  --dojo-text:       #ddd5b8;
+  --dojo-muted:      #7a9470;
+  --dojo-seal:       #9b2020;
 
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 16px;
-  --shadow: 0 4px 16px rgba(0,0,0,0.6);
+  --shadow:    0 4px 20px rgba(0,0,0,0.7);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.5);
 }
 
 html, body {
   height: 100%;
-  background-color: var(--felt-dark);
+  /* Tatami mat background:
+     1. Very dark dojo green base
+     2. Subtle radial vignette (edges darker)
+     3. Horizontal rush-weave lines (tatami weft)
+     4. Vertical rush-weave lines (tatami warp)
+     Together they form a faint rectangular woven grid */
+  background-color: var(--dojo-bg);
+  background-image:
+    radial-gradient(ellipse 160% 100% at 50% -10%, rgba(14,26,14,0.9) 0%, transparent 65%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 18px,
+      rgba(255,255,255,0.013) 18px,
+      rgba(255,255,255,0.013) 20px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 18px,
+      rgba(0,0,0,0.055) 18px,
+      rgba(0,0,0,0.055) 20px
+    );
   color: var(--text-primary);
   font-family: 'Georgia', 'Times New Roman', serif;
   font-size: 16px;
@@ -73,17 +118,80 @@ p { margin-bottom: 0.75em; }
 
 .header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  padding: 1rem 1.5rem;
-  background: var(--felt-mid);
-  border-bottom: 2px solid var(--felt-border);
+  padding: 1.1rem 1.75rem;
+  /* Dojo wooden entrance plaque:
+     Left side deepest brown, fading to near-black.
+     Faint horizontal wood-grain lines reinforce the plaque texture. */
+  background-color: #1e1208;
+  background-image:
+    linear-gradient(to right, rgba(46,31,14,0.95) 0%, rgba(22,14,5,0.98) 45%, rgba(12,8,2,1) 100%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 8px,
+      rgba(255,255,255,0.018) 8px,
+      rgba(255,255,255,0.018) 9px
+    );
+  border-bottom: 2px solid var(--dojo-border);
+  border-top: 2px solid rgba(107,76,34,0.5);
   border-radius: var(--radius-md) var(--radius-md) 0 0;
   margin-bottom: 1.5rem;
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(200,146,26,0.12),
+    inset 0 -1px 0 rgba(0,0,0,0.4);
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
 }
 
 .header h1 {
-  font-size: 1.5rem;
+  font-size: 1.45rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--gold-light);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+  margin: 0;
+  letter-spacing: 0.06em;
+}
+
+.header-seal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--dojo-seal);
+  /* Slight noise via multiple inset shadows to mimic ink stamp imperfection */
+  background-image: radial-gradient(ellipse 60% 55% at 45% 45%, #b82020, #7a1010);
+  color: #ffe8d0;
+  font-family: 'Georgia', serif;
+  font-size: 1.15rem;
+  font-weight: bold;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 3px;
+  box-shadow:
+    0 0 0 1px rgba(120,20,20,0.7),
+    0 0 8px rgba(140,30,30,0.5),
+    inset 0 1px 3px rgba(0,0,0,0.5),
+    inset 1px 0 2px rgba(0,0,0,0.3);
+  flex-shrink: 0;
+  letter-spacing: -0.02em;
+  transform: rotate(-1.5deg);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+}
+
+.header-subtitle {
+  font-size: 0.76rem;
+  color: var(--dojo-muted);
+  margin: 0.2rem 0 0;
+  letter-spacing: 0.04em;
+  font-style: italic;
 }
 
 .main-grid {
@@ -102,31 +210,39 @@ p { margin-bottom: 0.75em; }
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  /* sticky sidebar on desktop */
+  position: sticky;
+  top: 1rem;
+  align-self: start;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
 }
 
 /* --- Panel / card ----------------------------------------- */
 .panel {
-  background: var(--felt-mid);
-  border: 1px solid var(--felt-border);
+  background: var(--dojo-panel);
+  border: 1px solid var(--dojo-border);
   border-radius: var(--radius-md);
   padding: 1.25rem;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(200,146,26,0.06);
 }
 
 .panel-title {
   color: var(--gold);
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.16em;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--felt-border);
+  border-bottom: 1px solid var(--dojo-border);
+  /* Subtle parchment accent under title */
+  background: linear-gradient(to bottom, transparent 80%, rgba(184,132,26,0.04));
 }
 
 /* --- Poker table ------------------------------------------ */
 .poker-table {
   background: radial-gradient(ellipse 90% 70% at 50% 50%, var(--felt-light), var(--felt-mid));
-  border: 4px solid #6b4c11;
+  border: 4px solid var(--dojo-wood);
   border-radius: 50%;
   padding: 2rem 3rem;
   min-height: 200px;
@@ -135,7 +251,10 @@ p { margin-bottom: 0.75em; }
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  box-shadow: inset 0 0 40px rgba(0,0,0,0.5), var(--shadow);
+  box-shadow:
+    inset 0 0 50px rgba(0,0,0,0.6),
+    0 0 0 2px var(--dojo-border),
+    var(--shadow);
 }
 
 .poker-table-info {
@@ -244,16 +363,23 @@ p { margin-bottom: 0.75em; }
 .btn-call    { background: #14532d; color: #bbf7d0; }
 .btn-bet     { background: #78350f; color: #fef3c7; }
 .btn-raise   { background: #4c1d95; color: #ede9fe; }
-.btn-primary { background: var(--gold); color: #1a1a00; }
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold) 0%, #b07818 100%);
+  color: #1a0e00;
+  border: 1px solid rgba(200,146,26,0.4);
+  box-shadow: 0 2px 8px rgba(184,132,26,0.3);
+}
+.btn-primary:hover { opacity: 0.92; }
+
 .btn-secondary {
   background: transparent;
-  color: var(--text-muted);
-  border: 1px solid var(--felt-border);
+  color: var(--dojo-muted);
+  border: 1px solid var(--dojo-border);
 }
 .secondary-button {
   background: transparent;
-  color: var(--text-muted);
-  border: 1px solid var(--felt-border);
+  color: var(--dojo-muted);
+  border: 1px solid var(--dojo-border);
   border-radius: var(--radius-sm);
   padding: 0.35rem 0.85rem;
   font-size: 0.8rem;
@@ -263,7 +389,7 @@ p { margin-bottom: 0.75em; }
 }
 .secondary-button:hover {
   color: var(--text-primary);
-  border-color: var(--text-muted);
+  border-color: var(--dojo-gold);
 }
 
 .bet-input-group {
@@ -334,8 +460,8 @@ p { margin-bottom: 0.75em; }
 }
 
 .drill-box {
-  background: var(--felt-dark);
-  border-left: 3px solid var(--gold);
+  background: rgba(0,0,0,0.25);
+  border-left: 3px solid var(--dojo-gold);
   padding: 0.75rem 1rem;
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   font-size: 0.9rem;
@@ -357,7 +483,7 @@ p { margin-bottom: 0.75em; }
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem 0.75rem;
-  background: var(--felt-dark);
+  background: rgba(0,0,0,0.25);
   border-radius: var(--radius-sm);
   border-left: 3px solid transparent;
   font-size: 0.85rem;
@@ -391,7 +517,8 @@ p { margin-bottom: 0.75em; }
 }
 
 .stat-box {
-  background: var(--felt-dark);
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--dojo-border);
   border-radius: var(--radius-sm);
   padding: 0.75rem;
   text-align: center;
@@ -461,7 +588,7 @@ p { margin-bottom: 0.75em; }
   align-items: center;
   gap: 1.25rem;
   width: 100%;
-  max-width: 640px;
+  max-width: 720px;
   margin: 0 auto;
 }
 
@@ -492,25 +619,27 @@ p { margin-bottom: 0.75em; }
 .fixture-list {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.75rem;
   width: 100%;
 }
 
 .fixture-item {
-  background: var(--felt-mid);
-  border: 1px solid var(--felt-border);
+  background: var(--dojo-panel);
+  border: 1px solid var(--dojo-border);
   border-radius: var(--radius-md);
-  padding: 0.9rem 1.1rem;
+  padding: 1.1rem 1.4rem;
   cursor: pointer;
   text-align: left;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
   font-family: 'Georgia', serif;
   color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
 }
 
 .fixture-item:hover:not(:disabled) {
-  border-color: var(--gold);
-  background: var(--felt-light);
+  border-color: var(--dojo-gold);
+  background: #181e10;
+  box-shadow: 0 0 0 1px var(--dojo-gold), var(--shadow-sm);
 }
 
 .fixture-item:disabled {
@@ -522,12 +651,12 @@ p { margin-bottom: 0.75em; }
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.5rem;
 }
 
 .fixture-item-label {
   font-weight: bold;
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   color: var(--gold-light);
   flex: 1;
 }
@@ -553,9 +682,10 @@ p { margin-bottom: 0.75em; }
 }
 
 .fixture-item-desc {
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   color: var(--text-muted);
-  line-height: 1.5;
+  line-height: 1.55;
+  margin-bottom: 0.1rem;
 }
 
 /* --- Mistake category tag --------------------------------- */
@@ -585,7 +715,8 @@ p { margin-bottom: 0.75em; }
 }
 
 .session-report-block {
-  background: var(--felt-dark);
+  background: rgba(0,0,0,0.25);
+  border: 1px solid var(--dojo-border);
   border-radius: var(--radius-sm);
   padding: 0.75rem;
 }
@@ -605,8 +736,8 @@ p { margin-bottom: 0.75em; }
 }
 
 .session-report-drill {
-  background: var(--felt-dark);
-  border-left: 3px solid var(--gold);
+  background: rgba(0,0,0,0.25);
+  border-left: 3px solid var(--dojo-gold);
   padding: 0.75rem 1rem;
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   font-size: 0.9rem;
@@ -633,7 +764,11 @@ p { margin-bottom: 0.75em; }
   .main-grid {
     grid-template-columns: 1fr;
   }
+  /* un-sticky sidebar on mobile — stacks below main content */
   .right-column {
+    position: static;
+    max-height: none;
+    overflow-y: visible;
     flex-direction: row;
     flex-wrap: wrap;
   }
@@ -643,8 +778,580 @@ p { margin-bottom: 0.75em; }
   .poker-table {
     border-radius: var(--radius-lg);
     padding: 1.5rem;
+    overflow-x: hidden;
   }
   .session-report-stats {
     grid-template-columns: 1fr 1fr;
   }
+  /* How it works stacks vertically on mobile */
+  .how-it-works {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    max-width: 100%;
+  }
+  .how-it-works li:not(:last-child)::after {
+    display: none;
+  }
+  /* Full-width buttons on mobile */
+  .post-feedback-nav {
+    flex-direction: column;
+  }
+  .post-feedback-nav .btn,
+  .post-feedback-nav .secondary-button {
+    width: 100%;
+    text-align: center;
+  }
+  /* Prevent table/card overflow */
+  .app-container,
+  .welcome-screen,
+  .main-grid,
+  .left-column {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+  /* Drill cards readable on small screens */
+  .fixture-item {
+    font-size: 0.9rem;
+  }
+  .fixture-item-label {
+    font-size: 0.88rem;
+  }
 }
+
+/* --- How it works / Training rhythm ----------------------- */
+.how-it-works {
+  list-style: none;
+  padding: 0.6rem 1rem;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  width: 100%;
+  max-width: 620px;
+  /* Warm wood-toned lesson path card */
+  background: linear-gradient(to right, var(--dojo-wood), #201408);
+  border: 1px solid var(--dojo-border);
+  border-radius: var(--radius-md);
+  font-size: 0.82rem;
+  color: var(--dojo-muted);
+  box-shadow: var(--shadow-sm);
+}
+.how-it-works li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+.how-it-works li:not(:last-child)::after {
+  content: '→';
+  color: var(--dojo-gold);
+  font-size: 0.75rem;
+  margin-left: 0.4rem;
+}
+.hiw-step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--dojo-gold);
+  color: #1a0e00;
+  font-size: 0.7rem;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+/* --- Fixture section labels ------------------------------- */
+.fixture-section-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--dojo-gold);
+  font-weight: bold;
+  width: 100%;
+  max-width: 720px;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--dojo-border);
+}
+.fixture-section-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  width: 100%;
+  max-width: 720px;
+  margin: -0.5rem 0 0;
+}
+.fixture-item-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.3rem;
+  font-style: italic;
+}
+
+/* --- Onboarding banner — welcome scroll ------------------- */
+.onboarding-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: linear-gradient(to right, rgba(46,31,14,0.7), rgba(11,20,11,0.6));
+  border: 1px solid var(--dojo-border);
+  border-left: 3px solid var(--dojo-gold);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  max-width: 720px;
+  width: 100%;
+  position: relative;
+}
+.onboarding-content {
+  flex: 1;
+  font-size: 0.9rem;
+  color: var(--dojo-text);
+  line-height: 1.6;
+}
+.onboarding-content strong {
+  color: var(--gold-light);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+.onboarding-content p {
+  margin: 0 0 0.2rem;
+}
+.onboarding-tip {
+  color: var(--gold-light) !important;
+  margin-top: 0.4rem !important;
+}
+.onboarding-dismiss {
+  background: transparent;
+  border: none;
+  color: var(--dojo-muted);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0 0.25rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.onboarding-dismiss:hover { color: var(--text-primary); }
+
+/* --- Level hint in header --------------------------------- */
+.level-hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-style: italic;
+  white-space: nowrap;
+}
+
+/* --- Post-feedback navigation buttons --------------------- */
+.post-feedback-nav {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.post-feedback-nav .btn {
+  flex: 1;
+}
+.post-feedback-nav .secondary-button {
+  flex: 1;
+  text-align: center;
+}
+
+/* --- Key lesson box / Lesson to remember ------------------ */
+.key-lesson-box {
+  /* Quiet gold-bordered teaching note, slightly parchment */
+  background: linear-gradient(to right, rgba(46,31,14,0.5), rgba(11,30,11,0.3));
+  border: 1px solid var(--dojo-gold);
+  border-left: 3px solid var(--gold-light);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+  margin: 0.5rem 0;
+}
+.key-lesson-title {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--gold);
+  font-weight: bold;
+  margin-bottom: 0.4rem;
+}
+.key-lesson-body {
+  font-size: 0.9rem;
+  color: var(--dojo-text);
+  line-height: 1.65;
+}
+
+/* --- Score color overrides -------------------------------- */
+/* Ensure consistent green/yellow/red feedback coloring */
+/* These are applied via inline style from RATING_COLORS */
+
+/* --- Coach Summary / Sensei scroll ------------------------ */
+.coach-summary {
+  /* Warm parchment-tinted teaching note */
+  background: linear-gradient(to right, rgba(46,31,14,0.6), rgba(17,30,17,0.4));
+  border-left: 3px solid var(--dojo-gold);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 0.85rem 1rem;
+  font-size: 0.95rem;
+  color: var(--dojo-text);
+  line-height: 1.7;
+  margin: 0.5rem 0;
+  font-style: italic;
+}
+
+/* --- Why it matters (mistakes) — restrained red ----------- */
+.why-matters-box {
+  background: rgba(50,10,10,0.5);
+  border-left: 3px solid var(--dojo-red);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 0.75rem 1rem;
+  margin: 0.25rem 0;
+}
+.why-matters-title {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #d08080;
+  font-weight: bold;
+  margin-bottom: 0.35rem;
+}
+.why-matters-body {
+  font-size: 0.88rem;
+  color: #e8c8c8;
+  line-height: 1.6;
+}
+
+/* --- Drill card: footer row / CTA ------------------------- */
+.fixture-item-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.65rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(107,76,34,0.25);
+}
+.fixture-item-cta {
+  font-size: 0.8rem;
+  color: var(--gold);
+  font-weight: bold;
+  letter-spacing: 0.03em;
+  opacity: 0.8;
+  transition: opacity 0.15s;
+}
+.fixture-item:hover:not(:disabled) .fixture-item-cta {
+  opacity: 1;
+}
+
+/* --- Reset session button --------------------------------- */
+.reset-session-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  cursor: pointer;
+  padding: 0.4rem 0;
+  text-decoration: underline;
+  font-family: inherit;
+  display: block;
+  margin-top: 0.5rem;
+  opacity: 0.6;
+  transition: opacity 0.15s, color 0.15s;
+}
+.reset-session-btn:hover {
+  opacity: 1;
+  color: #fca5a5;
+}
+
+/* =========================================================
+   DOJO IDENTITY — COMPONENTS
+   ========================================================= */
+
+/* ── Path panel ─────────────────────────────────────────── */
+.path-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  width: 100%;
+  max-width: 720px;
+  background: linear-gradient(to right, var(--dojo-wood), #1c1008);
+  border: 1px solid var(--dojo-border);
+  border-left: 3px solid var(--dojo-gold);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  box-shadow: var(--shadow-sm);
+}
+.path-panel-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.path-panel-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--dojo-muted);
+}
+.path-panel-title {
+  font-size: 0.92rem;
+  color: var(--gold-light);
+  font-weight: bold;
+  letter-spacing: 0.03em;
+}
+.path-panel-focus {
+  font-size: 0.8rem;
+  color: var(--dojo-text);
+  font-style: italic;
+}
+.path-panel-description {
+  font-size: 0.82rem;
+  color: var(--dojo-text);
+  line-height: 1.5;
+  margin-top: 0.1rem;
+}
+.path-panel-progress {
+  font-size: 0.72rem;
+  color: var(--dojo-muted);
+  margin-top: 0.3rem;
+  letter-spacing: 0.04em;
+}
+
+/* Training path badge (kept for any fallback uses) */
+.training-path-badge {
+  display: none; /* replaced by .path-panel */
+}
+
+/* Today's practice label — sits above how-it-works */
+.today-practice-label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.76rem;
+  color: var(--dojo-muted);
+  letter-spacing: 0.06em;
+  width: 100%;
+  max-width: 720px;
+}
+.today-practice-label .jp {
+  font-size: 0.78rem;
+  opacity: 0.45;
+  letter-spacing: 0.02em;
+}
+.today-practice-label .en {
+  color: var(--dojo-text);
+  font-style: italic;
+}
+
+/* Belt path indicator — shows in header next to level selector */
+.belt-path-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  color: var(--dojo-muted);
+  letter-spacing: 0.04em;
+}
+.belt-path-indicator .belt-pip {
+  display: inline-block;
+  width: 28px;
+  height: 6px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.belt-pip-white    { background: #e8e0cc; border: 1px solid #aaa490; }
+.belt-pip-green    { background: #2a5a30; border: 1px solid #3d7a40; }
+.belt-pip-black    { background: #1a1a10; border: 1px solid var(--dojo-gold); }
+
+
+/* Current lesson section label */
+.current-lesson-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--dojo-muted);
+  margin-bottom: 0.5rem;
+}
+
+/* Belt badges — difficulty */
+.belt-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.68rem;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 2px;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+.belt-white {
+  background: #f0ede0;
+  color: #2a1f0a;
+  border: 1px solid #ccc8b0;
+}
+.belt-green {
+  background: #1a3320;
+  color: #7ecb8a;
+  border: 1px solid #2e5a38;
+}
+.belt-black {
+  background: #111111;
+  color: var(--dojo-gold);
+  border: 1px solid #3a3020;
+}
+.belt-foundation {
+  background: rgba(184,132,26,0.12);
+  color: var(--dojo-gold);
+  border: 1px solid rgba(184,132,26,0.35);
+  font-style: italic;
+  letter-spacing: 0.08em;
+}
+
+/* Coming-soon badge and card */
+.coming-soon-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.66rem;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 2px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  background: rgba(74,48,32,0.4);
+  color: var(--dojo-muted);
+  border: 1px dashed var(--dojo-border);
+}
+.fixture-item--coming-soon {
+  opacity: 0.58;
+  cursor: default;
+  pointer-events: none;
+  border-style: dashed;
+}
+
+/* Fixture item diff now uses belt classes */
+.fixture-item-diff {
+  font-size: 0.7rem;
+  padding: 2px 7px;
+  border-radius: 2px;
+}
+
+/* Home header tagline */
+.fixture-selector-tagline {
+  font-size: 0.88rem;
+  color: var(--dojo-muted);
+  font-weight: normal;
+  display: block;
+  margin-top: 0.2rem;
+}
+
+/* Fixture random btn */
+.fixture-random-btn {
+  font-size: 1rem;
+  padding: 0.9rem 2.5rem;
+  width: 100%;
+  max-width: 320px;
+}
+
+/* Advanced notice */
+.advanced-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: linear-gradient(to right, var(--dojo-wood), #1c1008);
+  border: 1px solid var(--dojo-border);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  max-width: 720px;
+  width: 100%;
+  margin-top: 1rem;
+}
+.advanced-notice-seal {
+  font-family: serif;
+  font-size: 1.5rem;
+  color: var(--dojo-gold);
+  line-height: 1;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+.advanced-notice-title {
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gold-light);
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+.advanced-notice-body {
+  font-size: 0.82rem;
+  color: var(--dojo-muted);
+  line-height: 1.55;
+}
+
+/* ── Foundation lesson tag (advanced belt cards) ─────────── */
+.fixture-item--foundation {
+  border-left: 3px solid var(--dojo-gold);
+}
+.fixture-item-foundation-tag {
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--dojo-gold);
+  margin-bottom: 0.5rem;
+  opacity: 0.85;
+}
+
+/* ── Focus label on drill card footer ───────────────────── */
+.fixture-item-focus {
+  font-size: 0.75rem;
+  color: var(--dojo-text);
+  font-style: italic;
+}
+
+/* ── Locked section (Beginner view) ─────────────────────── */
+.locked-section {
+  width: 100%;
+  max-width: 720px;
+  margin-top: 1.25rem;
+}
+.locked-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--dojo-border);
+}
+.locked-section-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--dojo-muted);
+}
+
+/* Locked card: dimmed, non-interactive */
+.fixture-item--locked {
+  position: relative;
+  opacity: 0.42;
+  cursor: default;
+  pointer-events: none;
+  overflow: hidden;
+}
+.locked-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  color: var(--dojo-muted);
+  background: rgba(8,15,8,0.55);
+  z-index: 1;
+  letter-spacing: 0.04em;
+}
+.fixture-list--locked {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+

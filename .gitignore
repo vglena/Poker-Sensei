@@ -7,6 +7,19 @@
 memory/
 .claude/
 
+# Sistema Jeffrey/Evolve (no es parte del poker app)
+agents/
+directives/
+execution/
+skills/
+context/
+CLAUDE.md
+IDENTITY.md
+SOUL.md
+DREAMS.md
+HEARTBEAT.md
+dashboard.html
+
 # Archivos temporales de trabajo
 .tmp/
 

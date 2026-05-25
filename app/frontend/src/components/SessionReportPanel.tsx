@@ -47,7 +47,7 @@ export default function SessionReportPanel({ sessionId, decisionCount }: Session
 
   return (
     <div className="panel">
-      <div className="panel-title">Session Report</div>
+      <div className="panel-title">Training Reflection</div>
 
       {!loaded && (
         <button
@@ -56,7 +56,7 @@ export default function SessionReportPanel({ sessionId, decisionCount }: Session
           onClick={handleLoad}
           disabled={loading}
         >
-          {loading ? 'Loading…' : 'View Session Summary'}
+          {loading ? 'Loading…' : 'View Training Reflection'}
         </button>
       )}
 
@@ -115,9 +115,7 @@ export default function SessionReportPanel({ sessionId, decisionCount }: Session
           {/* Recommended drill */}
           {report.recommended_drill && (
             <>
-              <div className="session-report-block-title" style={{ marginTop: '0.25rem' }}>
-                Next drill
-              </div>
+              <div className="session-report-block-title">Next practice</div>
               <div className="session-report-drill">{report.recommended_drill}</div>
             </>
           )}

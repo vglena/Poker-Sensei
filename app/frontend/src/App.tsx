@@ -81,10 +81,13 @@ export default function App() {
   const [sessionId] = useState<string>(getOrCreateSessionId)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-  // difficulty controls scenario complexity; userProfile.level controls coaching depth
   const [difficulty, setDifficulty] = useState<Difficulty>('beginner')
+  // Show onboarding banner only on first visit (cleared after first hand)
+  const [showOnboarding, setShowOnboarding] = useState<boolean>(
+    () => !sessionStorage.getItem('poker_onboarding_done')
+  )
 
-  const levels: Difficulty[] = ['beginner', 'intermediate', 'advanced', 'pro']
+  const levels: Difficulty[] = ['beginner', 'intermediate', 'advanced']
 
   // ---- Session stats ----
   const sessionDecisions = handHistory.length
@@ -172,8 +175,36 @@ export default function App() {
     loadNewHand()
   }, [loadNewHand])
 
+  const LEVEL_HINTS: Record<string, string> = {
+    beginner:     'Learn the fundamentals',
+    intermediate: 'Add odds, ranges, and sizing',
+    advanced:     'Study deeper strategy and exploitative play',
+    pro:          'Full line analysis',
+  }
+
   // ---- Go back to fixture selector without losing session history ----
   function handleBackToHome() {
+    setCurrentScenario(null)
+    setCurrentAnalysis(null)
+    setPhase('idle')
+  }
+
+  // ---- After feedback: go back to drill selector ----
+  const handleTryAnotherDrill = useCallback(() => {
+    handleBackToHome()
+  }, [])
+
+  // ---- Dismiss onboarding ----
+  function dismissOnboarding() {
+    sessionStorage.setItem('poker_onboarding_done', '1')
+    setShowOnboarding(false)
+  }
+
+  // ---- Reset session (clear stats + history, keep in app) ----
+  function handleResetSession() {
+    if (!window.confirm('Reset your session? This will clear your hand history and stats for this session.')) return
+    setHandHistory([])
+    setUserProfile(DEFAULT_PROFILE)
     setCurrentScenario(null)
     setCurrentAnalysis(null)
     setPhase('idle')
@@ -190,8 +221,15 @@ export default function App() {
     <div className="app-container">
       {/* Header */}
       <div className="header">
-        <h1>♠ Poker Training</h1>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+        <div className="header-left">
+          <h1>
+            <span className="header-seal">先</span>
+            Poker Sensei
+          </h1>
+          <p className="header-subtitle">A calm dojo for sharper poker decisions.</p>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', alignItems: 'flex-end' }}>
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
           <label style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
             Level:{' '}
             <select
@@ -213,7 +251,19 @@ export default function App() {
                 </option>
               ))}
             </select>
-          </label>
+            </label>
+            <span className="level-hint">{LEVEL_HINTS[userProfile.level]}</span>
+          </div>
+          {/* Belt path indicator */}
+          <div className="belt-path-indicator">
+            <span className={`belt-pip belt-pip-${
+              userProfile.level === 'beginner' ? 'white' :
+              userProfile.level === 'intermediate' ? 'green' : 'black'
+            }`} />
+            {userProfile.level === 'beginner' && 'White Belt Path'}
+            {userProfile.level === 'intermediate' && 'Green Belt Path'}
+            {(userProfile.level === 'advanced' || userProfile.level === 'pro') && 'Black Belt Path'}
+          </div>
         </div>
       </div>
 
@@ -234,14 +284,26 @@ export default function App() {
       {/* ---- IDLE PHASE ---- */}
       {phase === 'idle' && (
         <div className="welcome-screen">
+          {showOnboarding && (
+            <div className="onboarding-banner">
+              <div className="onboarding-content">
+                <strong>Welcome to Poker Sensei.</strong>
+                <p>Enter the dojo, choose a lesson, and receive calm guidance after each decision.</p>
+                <p className="onboarding-tip">New here? Begin with <strong>Preflop Raise</strong>.</p>
+              </div>
+              <button className="onboarding-dismiss" onClick={dismissOnboarding} aria-label="Dismiss">✕</button>
+            </div>
+          )}
           <FixtureSelector
             onSelectFixture={loadFixture}
             onRandomScenario={loadNewHand}
             loading={loading}
+            level={difficulty}
+            handHistory={handHistory}
           />
           {handHistory.length > 0 && (
             <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-              Session: {handHistory.length} hands · avg {sessionAvgScore.toFixed(1)}/10
+              Session: {handHistory.length} {handHistory.length === 1 ? 'hand' : 'hands'} · avg {sessionAvgScore.toFixed(1)}/10
             </p>
           )}
         </div>
@@ -252,7 +314,7 @@ export default function App() {
         <div className="main-grid">
           <div style={{ gridColumn: '1 / -1', marginBottom: '0.5rem' }}>
             <button className="secondary-button" onClick={handleBackToHome}>
-              ← Back to scenarios
+              ← Return to dojo
             </button>
           </div>
           <div className="left-column">
@@ -261,6 +323,7 @@ export default function App() {
             )}
             {currentScenario && (
               <>
+                <div className="current-lesson-label">Current lesson</div>
                 <PokerTable scenario={currentScenario} />
                 {phase === 'playing' && (
                   <ActionButtons
@@ -273,10 +336,20 @@ export default function App() {
                   <div className="loading">Analyzing your decision…</div>
                 )}
                 {phase === 'feedback' && currentAnalysis && (
-                  <FeedbackPanel
-                    analysis={currentAnalysis}
-                    onNextHand={handleNextHand}
-                  />
+                  <>
+                    <FeedbackPanel
+                      analysis={currentAnalysis}
+                      onNextHand={handleNextHand}
+                    />
+                    <div className="post-feedback-nav">
+                      <button className="secondary-button" onClick={handleTryAnotherDrill}>
+                        Return to dojo
+                      </button>
+                      <button className="btn btn-primary" onClick={handleNextHand} disabled={loading}>
+                        Next hand →
+                      </button>
+                    </div>
+                  </>
                 )}
               </>
             )}
@@ -286,6 +359,7 @@ export default function App() {
               profile={userProfile}
               sessionDecisions={sessionDecisions}
               sessionAvgScore={sessionAvgScore}
+              onResetSession={handleResetSession}
             />
             <SessionReportPanel
               sessionId={sessionId}

@@ -17,15 +17,15 @@ export default function HandHistory({ history }: HandHistoryProps) {
   if (history.length === 0) {
     return (
       <div className="panel">
-        <div className="panel-title">Hand History</div>
-        <div className="empty-state">No hands played yet. Start a session!</div>
+        <div className="panel-title">Lesson History</div>
+        <div className="empty-state">No lessons yet. Begin a drill to start.</div>
       </div>
     )
   }
 
   return (
     <div className="panel">
-      <div className="panel-title">Hand History ({history.length})</div>
+      <div className="panel-title">Lesson History ({history.length})</div>
       <ul className="hand-history-list">
         {[...history].reverse().map((entry) => {
           const color = RATING_COLORS[entry.rating]

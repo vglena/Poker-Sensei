@@ -11,16 +11,17 @@ interface UserProgressProps {
   profile: UserProfile
   sessionDecisions: number
   sessionAvgScore: number
+  onResetSession: () => void
 }
 
-export default function UserProgress({ profile, sessionDecisions, sessionAvgScore }: UserProgressProps) {
+export default function UserProgress({ profile, sessionDecisions, sessionAvgScore, onResetSession }: UserProgressProps) {
   const sessionAccuracy = sessionDecisions > 0
     ? Math.round((sessionAvgScore / 10) * 100)
     : 0
 
   return (
     <div className="panel">
-      <div className="panel-title">Session Progress</div>
+      <div className="panel-title">Dojo Progress</div>
 
       <div className="stats-grid">
         <div className="stat-box">
@@ -36,10 +37,11 @@ export default function UserProgress({ profile, sessionDecisions, sessionAvgScor
           <span className="stat-label">Accuracy</span>
         </div>
         <div className="stat-box">
-          <span className="stat-value" style={{ fontSize: '1rem', paddingTop: '4px', textTransform: 'capitalize' }}>
-            {profile.level}
+          <span className="stat-value" style={{ fontSize: '1rem', paddingTop: '4px' }}>
+            {profile.level === 'beginner' ? 'White' :
+             profile.level === 'intermediate' ? 'Green' : 'Black'} Belt
           </span>
-          <span className="stat-label">Level</span>
+          <span className="stat-label">Path</span>
         </div>
       </div>
 
@@ -49,6 +51,16 @@ export default function UserProgress({ profile, sessionDecisions, sessionAvgScor
           All time: {profile.total_sessions} sessions · {profile.total_decisions} decisions
           {profile.average_score > 0 && ` · avg ${profile.average_score.toFixed(1)}/10`}
         </div>
+      )}
+
+      {sessionDecisions > 0 && (
+        <button
+          className="reset-session-btn"
+          onClick={onResetSession}
+          title="Clear session history and start fresh"
+        >
+          Reset dojo session
+        </button>
       )}
     </div>
   )
