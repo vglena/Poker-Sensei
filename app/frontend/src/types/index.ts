@@ -77,6 +77,7 @@ export interface DecisionAnalysis {
   position_note: string | null
   explanation: string
   best_alternative: string
+  best_action_label: string
   recommended_sizing: string | null
   risk_analysis: string
   luck_vs_strategy: string
@@ -181,6 +182,7 @@ export interface HandHistoryEntry {
   hole_cards: CardCode[]
   community_cards: CardCode[]
   user_action: PlayerActionType
+  best_action_note: string
   rating: Rating
   rating_score: number
   timestamp: string
@@ -198,10 +200,18 @@ export const RATING_COLORS: Record<Rating, string> = {
 }
 
 export const RATING_LABELS: Record<Rating, string> = {
-  good:    'Good Play ✓',
+  good:    'Good Play',
   ok:      'Acceptable',
-  mistake: 'Mistake',
-  blunder: 'Blunder ✗',
+  mistake: 'Needs Review',
+  blunder: 'Incorrect',
+}
+
+/** Score-based label shown in the verdict row (overrides rating-based label). */
+export function scoreLabel(score: number): string {
+  if (score >= 9) return 'Excellent'
+  if (score >= 7) return 'Good'
+  if (score >= 5) return 'Needs Review'
+  return 'Incorrect'
 }
 
 export const SUIT_SYMBOLS: Record<string, string> = {

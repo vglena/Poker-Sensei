@@ -85,7 +85,7 @@ export default function SessionReportPanel({ sessionId, decisionCount }: Session
           {/* Best decision */}
           {report.strongest_decision && (
             <div className="session-report-block">
-              <div className="session-report-block-title">Best decision</div>
+              <div className="session-report-block-title">Highest Scored Decision</div>
               <div className="session-report-block-value" style={{ color: '#22c55e' }}>
                 {report.strongest_decision.action} on the {report.strongest_decision.street} · {report.strongest_decision.score}/10
               </div>

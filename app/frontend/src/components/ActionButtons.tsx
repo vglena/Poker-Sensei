@@ -43,7 +43,7 @@ export default function ActionButtons({ scenario, onAction, disabled = false }: 
 
   return (
     <div className="panel">
-      <div className="panel-title">Your Action</div>
+      <div className="panel-title">What should Hero do?</div>
 
       <div className="action-buttons">
         {available_actions.map((action) => (

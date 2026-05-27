@@ -18,7 +18,7 @@
 
 import React from 'react'
 import type { DecisionAnalysis } from '../types'
-import { RATING_COLORS, RATING_LABELS } from '../types'
+import { RATING_COLORS, scoreLabel } from '../types'
 
 interface FeedbackPanelProps {
   analysis: DecisionAnalysis
@@ -71,7 +71,7 @@ function expandKeyConcept(concept: string): string {
 
 export default function FeedbackPanel({ analysis, onNextHand }: FeedbackPanelProps) {
   const ratingColor = RATING_COLORS[analysis.rating]
-  const ratingLabel = RATING_LABELS[analysis.rating]
+  const label = scoreLabel(analysis.rating_score)
   const mistakeLabel = analysis.mistake_category
     ? (MISTAKE_LABELS[analysis.mistake_category] ?? analysis.mistake_category.replace(/_/g, ' '))
     : null
@@ -92,12 +92,19 @@ export default function FeedbackPanel({ analysis, onNextHand }: FeedbackPanelPro
           className="rating-badge"
           style={{ background: ratingColor + '22', color: ratingColor, border: `1px solid ${ratingColor}` }}
         >
-          {ratingLabel}
+          {label}
         </span>
         {mistakeLabel && (
           <span className="mistake-tag">{mistakeLabel}</span>
         )}
       </div>
+
+      {/* ── Best action hint (only when not optimal) ── */}
+      {analysis.best_action_label && analysis.rating_score < 10 && (
+        <p className="score-best-action">
+          Best play: <strong>{analysis.best_action_label}</strong>
+        </p>
+      )}
 
       {/* ── 2. Coach Summary ── */}
       {coachSummary && (

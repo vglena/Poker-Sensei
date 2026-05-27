@@ -148,6 +148,8 @@ p { margin-bottom: 0.75em; }
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .header h1 {
@@ -373,8 +375,12 @@ p { margin-bottom: 0.75em; }
 
 .btn-secondary {
   background: transparent;
-  color: var(--dojo-muted);
+  color: var(--dojo-text);
   border: 1px solid var(--dojo-border);
+}
+.btn-secondary:hover {
+  border-color: var(--dojo-gold);
+  color: var(--gold-light);
 }
 .secondary-button {
   background: transparent;
@@ -438,7 +444,18 @@ p { margin-bottom: 0.75em; }
 .rating-row {
   display: flex;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.score-best-action {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 0.85rem;
+  margin-top: 0;
+}
+.score-best-action strong {
+  color: var(--gold-light);
+  font-weight: 600;
 }
 
 .feedback-section {
@@ -499,9 +516,24 @@ p { margin-bottom: 0.75em; }
   font-weight: bold;
 }
 
-.hand-history-item .action-text {
+.hand-history-item .history-actions {
   flex: 1;
-  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  overflow: hidden;
+}
+.hand-history-item .history-your-action {
+  font-size: 0.82rem;
+  color: var(--text-primary);
+}
+.hand-history-item .history-best-action {
+  font-size: 0.72rem;
+  color: var(--dojo-gold);
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .hand-history-item .score-text {
@@ -586,7 +618,7 @@ p { margin-bottom: 0.75em; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.25rem;
+  gap: 1rem;
   width: 100%;
   max-width: 720px;
   margin: 0 auto;
@@ -600,13 +632,6 @@ p { margin-bottom: 0.75em; }
   color: var(--text-muted);
   font-size: 0.9rem;
   margin-top: 0.25rem;
-}
-
-.fixture-random-btn {
-  font-size: 1.1rem;
-  padding: 0.9rem 2.5rem;
-  width: 100%;
-  max-width: 320px;
 }
 
 .fixture-divider {
@@ -950,6 +975,12 @@ p { margin-bottom: 0.75em; }
   gap: 0.75rem;
   margin-top: 0.75rem;
   margin-bottom: 0.5rem;
+  position: sticky;
+  bottom: 0;
+  background: var(--dojo-bg);
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--dojo-border);
+  z-index: 10;
 }
 .post-feedback-nav .btn {
   flex: 1;
@@ -1079,7 +1110,7 @@ p { margin-bottom: 0.75em; }
   border: 1px solid var(--dojo-border);
   border-left: 3px solid var(--dojo-gold);
   border-radius: var(--radius-md);
-  padding: 0.75rem 1rem;
+  padding: 0.65rem 0.9rem;
   box-shadow: var(--shadow-sm);
 }
 .path-panel-left {
@@ -1245,14 +1276,6 @@ p { margin-bottom: 0.75em; }
   margin-top: 0.2rem;
 }
 
-/* Fixture random btn */
-.fixture-random-btn {
-  font-size: 1rem;
-  padding: 0.9rem 2.5rem;
-  width: 100%;
-  max-width: 320px;
-}
-
 /* Advanced notice */
 .advanced-notice {
   display: flex;
@@ -1355,3 +1378,192 @@ p { margin-bottom: 0.75em; }
   gap: 0.6rem;
 }
 
+/* --- Progress bar ----------------------------------------- */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid var(--dojo-border);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--dojo-gold), var(--gold-light));
+  border-radius: 999px;
+  transition: width 0.5s ease;
+  min-width: 0;
+}
+
+/* --- Start buttons ---------------------------------------- */
+.start-buttons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: 720px;
+}
+.fixture-start-btn {
+  font-size: 1.15rem;
+  font-weight: 700;
+  padding: 1rem 2rem;
+  min-height: 56px;
+  flex: 1;
+  min-width: 200px;
+  max-width: 360px;
+  letter-spacing: 0.02em;
+}
+.fixture-random-btn {
+  font-size: 0.88rem;
+  padding: 0.75rem 1.4rem;
+  flex: 0 0 auto;
+  opacity: 0.78;
+}
+.fixture-random-btn:hover:not(:disabled) {
+  opacity: 1;
+}
+
+/* --- Hero section (top of FixtureSelector) ---------------- */
+.fs-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  text-align: center;
+  padding-bottom: 0.25rem;
+}
+.fs-title {
+  margin: 0;
+  line-height: 1.2;
+}
+.continue-note {
+  color: #a7cfa3;
+  font-size: 0.95rem;
+  margin: 0;
+  font-style: italic;
+}
+
+/* --- Path progress row ------------------------------------ */
+.path-progress-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.75rem;
+  color: var(--dojo-muted);
+  margin-top: 0.35rem;
+  letter-spacing: 0.04em;
+}
+.path-progress-row strong {
+  color: var(--gold-light);
+  font-size: 0.85rem;
+}
+
+/* --- Today's focus note ----------------------------------- */
+.today-focus {
+  font-size: 0.9rem;
+  color: var(--dojo-text);
+  margin: -0.25rem 0 0;
+  width: 100%;
+  max-width: 720px;
+}
+.today-focus strong {
+  color: var(--gold-light);
+}
+
+/* --- Recommended lesson card ------------------------------ */
+.recommended-card {
+  width: 100%;
+  max-width: 720px;
+  background: linear-gradient(135deg, rgba(184,132,26,0.08), rgba(40,30,15,0.6));
+  border: 1px solid rgba(184,132,26,0.35);
+  border-left: 3px solid var(--dojo-gold);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+.recommended-card-eyebrow {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--dojo-gold);
+  margin: 0 0 0.5rem;
+}
+.recommended-card-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.recommended-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 0;
+}
+.recommended-card-title {
+  font-size: 1.05rem;
+  font-weight: bold;
+  color: var(--gold-light);
+}
+.recommended-card-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.recommended-card-btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-size: 0.9rem;
+  padding: 0.6rem 1.2rem;
+}
+
+/* --- Mobile responsive ------------------------------------ */
+@media (max-width: 800px) {
+  .header {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .header > div:last-child {
+    align-items: flex-start !important;
+    width: 100%;
+  }
+}
+
+@media (max-width: 700px) {
+  .app-container {
+    padding: 0.75rem;
+  }
+  .header {
+    padding: 0.9rem 1rem;
+  }
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.2rem; }
+  .welcome-screen,
+  .fixture-selector {
+    padding: 0 0.25rem;
+  }
+  .path-panel,
+  .fixture-list,
+  .locked-section,
+  .start-buttons {
+    width: 100%;
+    max-width: 100%;
+  }
+  .fixture-start-btn,
+  .fixture-random-btn {
+    width: 100%;
+    max-width: 100%;
+    flex: 1 1 100%;
+  }
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+  .right-column {
+    position: static;
+    max-height: none;
+  }
+}

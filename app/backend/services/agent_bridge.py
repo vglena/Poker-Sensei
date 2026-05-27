@@ -196,17 +196,49 @@ def _rule_based_analysis(
     # ----- PREFLOP -----
     if street == "preflop":
         if preflop_class == "premium":
-            if user_action in ("call", "raise"):
-                rating, score = RatingEnum.GOOD, 9
+            # Detect if we are facing a villain raise (not just a hero open)
+            facing_villain_raise = any(
+                a.get("action") in ("raise", "bet")
+                for a in scenario.get("action_history", [])
+                if not a.get("player", "").lower().startswith("hero")
+            )
+            if user_action == "raise":
+                rating, score = RatingEnum.GOOD, 10
                 explanation = (
-                    "You have a premium hand (top tier preflop holding). "
-                    "Playing it aggressively by raising or calling a raise is correct. "
-                    "Premium hands want to build a large pot."
+                    "3-betting with a premium hand in position is the correct aggressive play. "
+                    "Premium hands (AA, KK, QQ, AKs) should almost always be 3-bet against an open. "
+                    "You build a large pot with the best of it, narrow the field, and leverage your position."
                 )
-                best_alternative = "3-bet (raise) if facing a raise to build the pot and narrow the field."
-                risk_analysis = "Minimal risk — premium hands are strong favorites preflop."
+                best_alternative = "This is the recommended play."
+                risk_analysis = "Minimal. You may face a 4-bet, but even then premium hands have strong equity."
                 key_concept = "preflop aggression"
-                recommended_drill = "Practice 3-betting with premium hands from all positions."
+                recommended_drill = "Practice 3-betting premium hands from all positions — BTN, CO, HJ."
+            elif user_action == "call":
+                if facing_villain_raise:
+                    rating, score = RatingEnum.OK, 7
+                    explanation = (
+                        "Calling with a premium hand is not a blunder, but it is too passive. "
+                        "Against a CO open on the button, A-K suited and big pairs should 3-bet — "
+                        "not flat call. Calling lets speculative hands enter cheaply, surrenders initiative, "
+                        "and fails to build the pot when you have the best of it."
+                    )
+                    best_alternative = "3-bet to build the pot, narrow the field, and define villain's range."
+                    risk_analysis = (
+                        "Flat calling invites multi-way pots where your equity advantage shrinks. "
+                        "You also give up the chance to win the pot immediately vs weaker holdings."
+                    )
+                    key_concept = "preflop aggression"
+                    recommended_drill = "Practice 3-betting premium hands in position. Flat-calling AK is a common leak."
+                else:
+                    rating, score = RatingEnum.OK, 7
+                    explanation = (
+                        "Limping or calling with a premium hand surrenders initiative. "
+                        "Open-raise to build the pot and define your range."
+                    )
+                    best_alternative = "Open-raise (3–4x BB) with premium hands."
+                    risk_analysis = "Limping invites multi-way pots and reduces your equity advantage."
+                    key_concept = "preflop aggression"
+                    recommended_drill = "Practice open-raising with premium hands from every position."
             elif user_action == "fold":
                 rating, score = RatingEnum.BLUNDER, 1
                 explanation = "You folded a premium hand preflop. This is a significant mistake."
@@ -449,17 +481,31 @@ def _rule_based_analysis(
             key_concept = "river fold discipline"
             recommended_drill = "Practice identifying when to fold vs call on the river."
 
-    # Luck vs strategy for hands where result might differ
-    if rating in (RatingEnum.GOOD, RatingEnum.OK):
+    # Luck vs strategy — score-based framing
+    if score >= 9:
         luck_vs_strategy = (
-            "Strategy. You made the correct play based on the available information. "
-            "If you lost this hand, it was variance — keep making the same decisions."
+            "Strategy. You made the best play based on the available information."
+        )
+    elif score >= 7:
+        luck_vs_strategy = (
+            "Strategy. Your play is reasonable, but there is a more profitable option."
+        )
+    elif score >= 5:
+        luck_vs_strategy = (
+            "Review. This decision misses an important poker concept."
         )
     else:
         luck_vs_strategy = (
-            "Strategy. This was a controllable mistake — not bad luck. "
-            "Focus on the decision process, not the result."
+            "Discipline check. This is a spot to slow down and review the fundamentals."
         )
+
+    # Derive a short best_action_label from best_alternative for display near the score
+    import re as _re
+    _action_pat = _re.compile(
+        r'^(Fold|Call|Raise|3-bet|Open-raise|Bet|Check|Semi-bluff)', _re.IGNORECASE
+    )
+    _m = _action_pat.match(best_alternative) if best_alternative else None
+    best_action_label = _m.group(1) if _m else ""
 
     # Derive mistake_category from key_concept + rating
     mistake_category: Optional[str] = None
@@ -483,6 +529,7 @@ def _rule_based_analysis(
         "score": score,
         "explanation": explanation,
         "best_alternative": best_alternative,
+        "best_action_label": best_action_label,
         "recommended_sizing": recommended_sizing,
         "risk_analysis": risk_analysis,
         "luck_vs_strategy": luck_vs_strategy,
@@ -600,6 +647,7 @@ class AgentBridge:
             position_note=position_note,
             explanation=analysis_raw["explanation"],
             best_alternative=analysis_raw["best_alternative"],
+            best_action_label=analysis_raw.get("best_action_label", ""),
             recommended_sizing=analysis_raw.get("recommended_sizing"),
             risk_analysis=analysis_raw["risk_analysis"],
             luck_vs_strategy=analysis_raw["luck_vs_strategy"],

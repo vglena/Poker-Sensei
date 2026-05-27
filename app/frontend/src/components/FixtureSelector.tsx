@@ -242,32 +242,81 @@ export default function FixtureSelector({
     ? `${foundationPracticed}/${FOUNDATION_LESSONS.length} foundation ${foundationPracticed === 1 ? 'lesson' : 'lessons'} reviewed`
     : `${pathPracticed}/${pathTotal} ${pathPracticed === 1 ? 'lesson' : 'lessons'} practiced`
 
+  const progressPracticed = isAdvanced ? foundationPracticed : pathPracticed
+  const progressTotal     = isAdvanced ? FOUNDATION_LESSONS.length : pathTotal
+  const progressPercent   = progressTotal > 0 ? (progressPracticed / progressTotal) * 100 : 0
+
+  // First live fixture in the current path (for the primary Start button)
+  const liveLessons = isAdvanced ? FOUNDATION_LESSONS : pathLessons.filter(l => l.hasFixture)
+  const firstLiveLesson = isAdvanced ? FOUNDATION_LESSONS[0] : pathLessons.find(l => l.hasFixture)
+  // First unpracticed live lesson → drives "Recommended" card and today's focus
+  const recommendedLesson = liveLessons.find(l => !practicedSet.has(l.name)) ?? null
+  const todayFocus = recommendedLesson?.focus ?? (liveLessons[0]?.focus ?? null)
+
   return (
     <div className="fixture-selector">
-      <div className="fixture-selector-header">
-        <h2>Enter the dojo.<br /><span className="fixture-selector-tagline">Study one decision at a time.</span></h2>
+
+      {/* ── Hero section: title, continue note, CTA buttons ── */}
+      <div className="fs-hero">
+        <h2 className="fs-title">
+          Enter the dojo.<br />
+          <span className="fixture-selector-tagline">Study one decision at a time.</span>
+        </h2>
+
+        {progressPracticed > 0 && (
+          <p className="continue-note">
+            You have practiced {progressPracticed} {progressPracticed === 1 ? 'lesson' : 'lessons'}.{' '}
+            Continue your {path.beltLabel} path.
+          </p>
+        )}
+
+        <div className="start-buttons">
+          {firstLiveLesson && (
+            <button
+              className="btn btn-primary fixture-start-btn"
+              onClick={() => onSelectFixture(firstLiveLesson.name)}
+              disabled={loading}
+            >
+              ▶ Start {path.beltLabel} Practice
+            </button>
+          )}
+          <button
+            className="btn btn-secondary fixture-random-btn"
+            onClick={onRandomScenario}
+            disabled={loading}
+          >
+            ♠ Random Lesson
+          </button>
+        </div>
       </div>
 
-      {/* ── Path panel ── */}
+      {/* ── Path panel with enhanced progress ── */}
       <div className="path-panel">
         <div className="path-panel-left">
           <span className="path-panel-label">Current path</span>
           <div className="path-panel-title">{path.title}</div>
           <div className="path-panel-description">{path.description}</div>
-          <div className="path-panel-progress">{progressLabel}</div>
+          <div className="path-progress-row">
+            <span>{path.beltLabel} progress</span>
+            <strong>{progressPracticed} / {progressTotal}</strong>
+          </div>
+          <div className="progress-bar" role="progressbar" aria-valuenow={progressPercent} aria-valuemin={0} aria-valuemax={100}>
+            <div className="progress-fill" style={{ width: `${progressPercent}%` }} />
+          </div>
         </div>
         <span className={path.beltCss} style={{ alignSelf: 'flex-start', marginTop: '0.15rem' }}>
           {path.beltLabel}
         </span>
       </div>
 
-      {/* Today's practice label */}
+      {/* ── Today's practice ── */}
       <p className="today-practice-label">
         <span className="jp">今日の稽古</span>
         <span className="en">Today's practice</span>
       </p>
-
-      {/* Training rhythm */}
+      {todayFocus && (
+        <p className="today-focus">Today's focus: <strong>{todayFocus}</strong></p>
+      )}
       <ol className="how-it-works" aria-label="Training rhythm">
         <li><span className="hiw-step">1</span> Choose a spot</li>
         <li><span className="hiw-step">2</span> Make your decision</li>
@@ -275,21 +324,25 @@ export default function FixtureSelector({
         <li><span className="hiw-step">4</span> Refine your discipline</li>
       </ol>
 
-      {/* ── Random Lesson ── */}
-      <div className="fixture-section-label">Random Lesson</div>
-      <button
-        className="btn btn-primary fixture-random-btn"
-        onClick={onRandomScenario}
-        disabled={loading}
-      >
-        ♠ Random Lesson
-      </button>
-
-      {fetchError && (
-        <p style={{ color: '#d08080', fontSize: '0.85rem', textAlign: 'center' }}>{fetchError}</p>
-      )}
-      {fixtures.length === 0 && !fetchError && (
-        <p className="empty-state">Loading drills…</p>
+      {/* ── Recommended next lesson ── */}
+      {recommendedLesson && recommendedLesson.hasFixture && (
+        <div className="recommended-card">
+          <p className="recommended-card-eyebrow">Recommended next lesson</p>
+          <div className="recommended-card-body">
+            <div className="recommended-card-info">
+              <div className="recommended-card-title">{recommendedLesson.label}</div>
+              <div className="recommended-card-desc">{recommendedLesson.description}</div>
+              <span className="fixture-item-focus">Focus: {recommendedLesson.focus}</span>
+            </div>
+            <button
+              className="btn btn-primary recommended-card-btn"
+              onClick={() => onSelectFixture(recommendedLesson.name)}
+              disabled={loading}
+            >
+              Start lesson →
+            </button>
+          </div>
+        </div>
       )}
 
       {/* ── Black Belt: Foundation Review + Challenges ── */}

@@ -157,6 +157,7 @@ export default function App() {
         hole_cards: currentScenario.hole_cards,
         community_cards: currentScenario.community_cards,
         user_action: action,
+        best_action_note: analysis.best_alternative,
         rating: analysis.rating,
         rating_score: analysis.rating_score,
         timestamp: new Date().toISOString(),
@@ -288,8 +289,7 @@ export default function App() {
             <div className="onboarding-banner">
               <div className="onboarding-content">
                 <strong>Welcome to Poker Sensei.</strong>
-                <p>Enter the dojo, choose a lesson, and receive calm guidance after each decision.</p>
-                <p className="onboarding-tip">New here? Begin with <strong>Preflop Raise</strong>.</p>
+                <p>Choose a lesson and receive calm guidance after each decision.</p>
               </div>
               <button className="onboarding-dismiss" onClick={dismissOnboarding} aria-label="Dismiss">✕</button>
             </div>

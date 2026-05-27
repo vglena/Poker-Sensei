@@ -186,6 +186,7 @@ class DecisionAnalysis(BaseModel):
     position_note: Optional[str] = None
     explanation: str
     best_alternative: str
+    best_action_label: str = ""
     recommended_sizing: Optional[str] = None
     risk_analysis: str
     luck_vs_strategy: str

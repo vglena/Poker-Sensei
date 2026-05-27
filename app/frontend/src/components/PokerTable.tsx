@@ -40,6 +40,21 @@ export function PlayingCard({ code, size = 'normal' }: PlayingCardProps) {
   )
 }
 
+/** Conjugate a raw action token to a readable verb phrase. */
+function formatActionEntry(player: string, action: string, amount: number | null): string {
+  const p = player.charAt(0).toUpperCase() + player.slice(1)
+  const verbMap: Record<string, string> = {
+    raise: 'raises to',
+    bet:   'bets',
+    call:  'calls',
+    check: 'checks',
+    fold:  'folds',
+  }
+  const verb = verbMap[action.toLowerCase()] ?? action
+  const amt  = amount != null ? ` ${amount}` : ''
+  return `${p} ${verb}${amt}`
+}
+
 interface PokerTableProps {
   scenario: PokerScenario
 }
@@ -116,7 +131,7 @@ export default function PokerTable({ scenario }: PokerTableProps) {
           <strong style={{ color: 'var(--text-primary)' }}>Action so far:</strong>{' '}
           {scenario.action_history.map((a, i) => (
             <span key={i}>
-              {a.player} {a.action}{a.amount ? ` ${a.amount}` : ''}
+              {formatActionEntry(a.player, a.action, a.amount ?? null)}
               {i < scenario.action_history.length - 1 ? ' → ' : ''}
             </span>
           ))}

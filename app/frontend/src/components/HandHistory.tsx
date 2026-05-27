@@ -6,7 +6,7 @@
 
 import React from 'react'
 import type { HandHistoryEntry } from '../types'
-import { RATING_COLORS, RATING_LABELS, SUIT_SYMBOLS, SUIT_COLORS, ACTION_LABELS } from '../types'
+import { RATING_COLORS, ACTION_LABELS } from '../types'
 import { PlayingCard } from './PokerTable'
 
 interface HandHistoryProps {
@@ -42,10 +42,19 @@ export default function HandHistory({ history }: HandHistoryProps) {
                 ))}
               </div>
 
-              {/* Action */}
-              <span className="action-text" style={{ textTransform: 'capitalize' }}>
-                {entry.street} · {ACTION_LABELS[entry.user_action]}
-              </span>
+              {/* Action vs best */}
+              <div className="history-actions">
+                <span className="history-your-action" style={{ textTransform: 'capitalize' }}>
+                  {entry.street} · You: {ACTION_LABELS[entry.user_action]}
+                </span>
+                {entry.best_action_note && entry.best_action_note !== 'This is the recommended play.' && entry.best_action_note !== 'This is correct.' && (
+                  <span className="history-best-action">
+                    {entry.best_action_note.length > 50
+                      ? entry.best_action_note.slice(0, 50) + '…'
+                      : entry.best_action_note}
+                  </span>
+                )}
+              </div>
 
               {/* Score */}
               <span className="score-text" style={{ color }}>
