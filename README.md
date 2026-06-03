@@ -1,3 +1,12 @@
+---
+title: Poker Sensei API
+emoji: "🥋"
+colorFrom: green
+colorTo: yellow
+sdk: docker
+app_port: 7860
+---
+
 # Poker Training App
 
 A local training tool for learning Texas Hold'em poker strategy.
