@@ -2,7 +2,7 @@
  * api/client.ts
  * -------------
  * Fetch-based API client for the poker training backend.
- * All endpoints proxy through Vite's /api prefix to http://localhost:8000.
+ * All endpoints proxy through Vite's /api prefix to the Vite proxy target.
  *
  * Canonical endpoint paths:
  *   GET  /api/scenario/new          — new training scenario
@@ -24,10 +24,15 @@ const BASE = '/api'
 // ---------------------------------------------------------------------------
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(`${BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
-    ...options,
-  })
+  let response: Response
+  try {
+    response = await fetch(`${BASE}${path}`, {
+      headers: { 'Content-Type': 'application/json' },
+      ...options,
+    })
+  } catch {
+    throw new Error('API_UNREACHABLE')
+  }
 
   if (!response.ok) {
     const body = await response.text()

@@ -263,6 +263,12 @@ export default function FixtureSelector({
           <span className="fixture-selector-tagline">Study one decision at a time.</span>
         </h2>
 
+        {fetchError && (
+          <p className="fixture-fetch-warning">
+            Sensei note: the dojo could not load all drills. You can still train with available lessons.
+          </p>
+        )}
+
         {progressPracticed > 0 && (
           <p className="continue-note">
             You have practiced {progressPracticed} {progressPracticed === 1 ? 'lesson' : 'lessons'}.{' '}

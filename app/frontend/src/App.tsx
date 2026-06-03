@@ -68,6 +68,24 @@ function getOrCreateSessionId(): string {
   return sid
 }
 
+function formatDojoError(err: unknown, fallback: string): string {
+  const raw = err instanceof Error ? err.message : ''
+
+  if (raw === 'API_UNREACHABLE') {
+    return 'Sensei note: the dojo server is not reachable. Start the backend and try again.'
+  }
+
+  if (raw.includes('API error 404')) {
+    return 'Sensei note: this lesson is not available yet in the dojo.'
+  }
+
+  if (raw.includes('API error 500')) {
+    return 'Sensei note: the dojo had an internal stumble. Take a breath and try once more.'
+  }
+
+  return fallback
+}
+
 // ---------------------------------------------------------------------------
 // App
 // ---------------------------------------------------------------------------
@@ -112,7 +130,7 @@ export default function App() {
       const scenario = await fetchScenario({ difficulty })
       setCurrentScenario(scenario)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load scenario.')
+      setError(formatDojoError(err, 'Sensei note: could not load a lesson right now.'))
       setPhase('idle')
     } finally {
       setLoading(false)
@@ -127,7 +145,7 @@ export default function App() {
       const scenario = await fetchFixtureScenario(name)
       applyScenario(scenario)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load fixture.')
+      setError(formatDojoError(err, 'Sensei note: could not open that drill.'))
       setPhase('idle')
     } finally {
       setLoading(false)
@@ -165,7 +183,7 @@ export default function App() {
       setHandHistory((prev) => [...prev, entry])
       setUserProfile((prev) => ({ ...prev, total_decisions: prev.total_decisions + 1 }))
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to analyze decision.')
+      setError(formatDojoError(err, 'Sensei note: feedback is temporarily unavailable.'))
     } finally {
       setLoading(false)
     }

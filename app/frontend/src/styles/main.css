@@ -910,6 +910,18 @@ p { margin-bottom: 0.75em; }
   max-width: 720px;
   margin: -0.5rem 0 0;
 }
+.fixture-fetch-warning {
+  width: 100%;
+  max-width: 720px;
+  margin: 0.1rem 0 0.25rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid rgba(139, 26, 26, 0.55);
+  border-left: 3px solid var(--dojo-red);
+  border-radius: var(--radius-sm);
+  background: rgba(60, 12, 12, 0.45);
+  color: #f3c7c7;
+  font-size: 0.82rem;
+}
 .fixture-item-hint {
   font-size: 0.75rem;
   color: var(--text-muted);
