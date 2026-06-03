@@ -41,6 +41,20 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from routers import scenarios, decisions, sessions
 
+
+def _load_cors_origins() -> list[str]:
+    env_value = os.getenv("CORS_ORIGINS", "").strip()
+    if env_value:
+        return [origin.strip() for origin in env_value.split(",") if origin.strip()]
+
+    return [
+        "http://localhost:5173",  # Vite default
+        "http://localhost:5174",  # Vite fallback
+        "http://localhost:3000",  # CRA fallback
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:5174",
+    ]
+
 # ---------------------------------------------------------------------------
 # App configuration
 # ---------------------------------------------------------------------------
@@ -63,13 +77,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",    # Vite default
-        "http://localhost:5174",    # Vite fallback
-        "http://localhost:3000",    # CRA fallback
-        "http://127.0.0.1:5173",
-        "http://127.0.0.1:5174",
-    ],
+    allow_origins=_load_cors_origins(),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

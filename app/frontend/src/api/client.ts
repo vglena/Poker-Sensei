@@ -17,7 +17,8 @@
 
 import type { PokerScenario, DecisionAnalysis, HandReview, SessionReport, FixtureItem } from '../types'
 
-const BASE = '/api'
+const RAW_BASE = import.meta.env.VITE_API_BASE_URL?.trim()
+const BASE = RAW_BASE ? RAW_BASE.replace(/\/$/, '') : '/api'
 
 // ---------------------------------------------------------------------------
 // Generic fetch helper
